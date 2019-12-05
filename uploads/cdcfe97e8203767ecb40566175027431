@@ -1,0 +1,268 @@
+class Calculator extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      number: [0],
+      screen: [0],
+      result: [0],
+      calc:[0]
+    };
+    this.onScreen = this.onScreen.bind(this);
+    this.clearAll = this.clearAll.bind(this);
+    this.getResult = this.getResult.bind(this);
+    this.setOperator = this.setOperator.bind(this);
+  }
+
+  onScreen(event) {
+    // si tengo un resultado previo
+     if (this.state.result !== "") {
+        this.setState({
+          number: "".concat(event.target.value),
+          screen: "",
+          result: "",
+          calc: ""
+        });
+    // si no tengo un resultado previo
+      } else if(this.state.number !== "0") {
+        if(event.target.value !== 0){         
+        this.setState({
+          number: this.state.number.concat(event.target.value)
+        }); 
+        }      
+    }else{
+      this.setState({
+          number: ''.concat(event.target.value)
+        });
+    }
+  }
+
+  clearAll() {
+    this.setState({
+      number: [0],
+      screen: [0],
+      result: [0],
+      calc:[0]
+    });
+  }
+
+  getResult() {
+    var aux = this.state.calc.concat(this.state.number);
+    var newResult = aux.replace(/X/g, "*");
+    var evaluation = eval(newResult);
+    this.setState({
+      result: evaluation,
+      number: evaluation,
+      screen: [],
+      calc:[]
+    });
+  }
+
+  setOperator(event) {
+    if (this.state.result !== "") {
+      var newValue2 = this.state.result;
+      this.setState({
+        screen: "".concat(newValue2 + event.target.value),
+        number: "",
+        result: "",
+        calc:"".concat(newValue2 + event.target.value)
+      });
+    } else {
+      switch (event.target.value) {
+        case " X ":
+        case " / ":        
+        case " + ":
+        case ' - ':
+          if (this.state.calc.endsWith(" ") && this.state.number ==''){              
+              const onScreen = this.state.calc;
+              const newScreen = onScreen.slice(0, -3).concat(event.target.value);
+              this.setState({
+                calc: newScreen
+              });              
+          }
+          else{
+          const aux2 = this.state.number.concat(event.target.value);
+          this.setState({
+              number: '',
+              screen: this.state.screen.concat(aux2),
+              calc: this.state.screen.concat(aux2)
+            });
+          }
+          break;
+        case ".":
+          if (this.state.number.indexOf(".") == -1) {
+            this.setState({
+              number: this.state.number.concat(".")              
+            });
+          }
+          break;
+        default:
+          if (this.state.number.endsWith(".") == false) {
+              const aux = this.state.number.concat(event.target.value);
+              this.setState({
+                screen: this.state.screen.concat(aux),
+                number:""
+              });
+            }
+      }
+    }
+  }
+
+  render() {
+    return (
+      <div className="container">
+        <h1 id="title" className="my-4 text-center">
+          Javascript Calculator
+        </h1>
+        <div id="mainbox" className="p-2 m-auto">
+          <div id="screen">
+            <p id="display">{this.state.number}</p>            
+              <p id="acumulado">{this.state.screen}<br/>{this.state.calc}</p>                
+              <p className="h1 text-success text-right font-weight-bold">{this.state.result}</p>
+          </div>
+          <div className="d-flex flex-row">
+            <div className="d-flex flex-wrap justify-content-center">
+              <button
+                id="one"
+                value={1}
+                onClick={this.onScreen}
+                className="btn btn-primary"
+              >
+                1
+              </button>
+              <button
+                id="two"
+                value={2}
+                onClick={this.onScreen}
+                className="btn btn-primary"
+              >
+                2
+              </button>
+              <button
+                id="three"
+                value={3}
+                onClick={this.onScreen}
+                className="btn btn-primary"
+              >
+                3
+              </button>
+              <button
+                id="four"
+                value={4}
+                onClick={this.onScreen}
+                className="btn btn-primary"
+              >
+                4
+              </button>
+              <button
+                id="five"
+                value={5}
+                onClick={this.onScreen}
+                className="btn btn-primary"
+              >
+                5
+              </button>
+              <button
+                id="six"
+                value={6}
+                onClick={this.onScreen}
+                className="btn btn-primary"
+              >
+                6
+              </button>
+              <button
+                id="seven"
+                value={7}
+                onClick={this.onScreen}
+                className="btn btn-primary"
+              >
+                7
+              </button>
+              <button
+                id="eight"
+                value={8}
+                onClick={this.onScreen}
+                className="btn btn-primary"
+              >
+                8
+              </button>
+              <button
+                id="nine"
+                value={9}
+                onClick={this.onScreen}
+                className="btn btn-primary"
+              >
+                9
+              </button>
+              <button
+                id="zero"
+                value={0}
+                onClick={this.onScreen}
+                className="btn btn-primary"
+              >
+                0
+              </button>
+            </div>
+            <div className="d-flex flex-wrap justify-content-center">
+              <button
+                onClick={this.clearAll}
+                id="clear"
+                className="btn btn-primary"
+              >
+                AC
+              </button>
+              <button
+                id="divide"
+                value={" / "}
+                onClick={this.setOperator}
+                className="btn btn-primary operator"
+              >
+                /
+              </button>
+              <button
+                id="multiply"
+                value={" X "}
+                onClick={this.setOperator}
+                className="btn btn-primary operator"
+              >
+                X
+              </button>
+              <button
+                id="subtract"
+                value={" - "}
+                onClick={this.setOperator}
+                className="btn btn-primary operator"
+              >
+                -
+              </button>
+              <button
+                id="add"
+                value={" + "}
+                onClick={this.setOperator}
+                className="btn btn-primary operator"
+              >
+                +
+              </button>
+              <button
+                id="decimal"
+                value={"."}
+                onClick={this.setOperator}
+                className="btn btn-primary operator"
+              >
+                .
+              </button>
+              <button
+                id="equals"
+                onClick={this.getResult}
+                className="btn btn-primary"
+              >
+                =
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<Calculator />, document.getElementById("calculator"));
